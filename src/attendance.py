@@ -179,24 +179,35 @@ def process_group_photo(image_path, output_csv='attendance.csv'):
                 f.write(f"Attendance Report\n")
                 f.write(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
                 f.write("="*45 + "\n")
-                f.write(f"{'Roll No':<15} | {'Name':<20} | {'Time':<10}\n")
+                f.write(f"{'Roll No':<15} | {'Name':<20} | {'Status':<10}\n")
                 f.write("-" * 45 + "\n")
                 
-                # Rows
-                for r_no in present_roll_nos:
+                # Rows - Iterate ALL registered students
+                for r_no in known_roll_nos:
+                    # Get Name
                     if str(r_no) in db:
                         s_name = db[str(r_no)]['name']
                     else:
-                        # Fallback if int key
                         try: s_name = db[int(r_no)]['name']
                         except: s_name = "Unknown"
+                    
+                    # Check Status
+                    # We store present rolls as they appear in DB (usually string or int). 
+                    # present_roll_nos comes from known_roll_nos so types should match.
+                    if r_no in present_roll_nos:
+                         status = time_display
+                    else:
+                         status = "Absent"
                         
-                    f.write(f"{str(r_no):<15} | {s_name:<20} | {time_display:<10}\n")
+                    f.write(f"{str(r_no):<15} | {s_name:<20} | {status:<10}\n")
                     
                 f.write("="*45 + "\n")
+                f.write(f"Total Registered: {len(known_roll_nos)}\n")
+                f.write(f"Present: {len(present_roll_nos)}\n")
+                f.write(f"Absent: {len(known_roll_nos) - len(present_roll_nos)}\n")
                 
             print(f"Text report saved: {txt_filename}")
-            msg = f"Success! {len(present_roll_nos)} students marked present.\nReport: {txt_filename}"
+            msg = f"Success! Report generated.\nFile: {txt_filename}"
             return True, msg, debug_image_path
             
         except Exception as e:
@@ -382,21 +393,30 @@ def process_webcam(source=0):
                 f.write(f"Live Session Attendance Report\n")
                 f.write(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
                 f.write("="*45 + "\n")
-                f.write(f"{'Roll No':<15} | {'Name':<20} | {'Time':<10}\n")
+                f.write(f"{'Roll No':<15} | {'Name':<20} | {'Status':<10}\n")
                 f.write("-" * 45 + "\n")
                 
-                # Rows
-                for r_no in session_present_roll_nos:
+                # Rows - Iterate ALL registered students
+                for r_no in known_roll_nos:
+                    # Get Name
                     if str(r_no) in db:
                         s_name = db[str(r_no)]['name']
                     else:
-                        # Fallback if int key
-                        try: s_name = db[int(r_no)]['name']
-                        except: s_name = "Unknown"
+                         try: s_name = db[int(r_no)]['name']
+                         except: s_name = "Unknown"
+                    
+                    # Check Status
+                    if r_no in session_present_roll_nos:
+                         status = time_display
+                    else:
+                         status = "Absent"
                         
-                    f.write(f"{str(r_no):<15} | {s_name:<20} | {time_display:<10}\n")
+                    f.write(f"{str(r_no):<15} | {s_name:<20} | {status:<10}\n")
                     
                 f.write("="*45 + "\n")
+                f.write(f"Total Registered: {len(known_roll_nos)}\n")
+                f.write(f"Present: {len(session_present_roll_nos)}\n")
+                f.write(f"Absent: {len(known_roll_nos) - len(session_present_roll_nos)}\n")
                 
             print(f"Live session report saved: {txt_filename}")
             
