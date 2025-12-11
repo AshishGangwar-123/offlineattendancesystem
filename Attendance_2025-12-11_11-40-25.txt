@@ -1,0 +1,16 @@
+Attendance Report
+Date: 2025-12-11 11:40:25
+=============================================
+Roll No         | Name                 | Status    
+---------------------------------------------
+24317           | Ashish Kumar         | 11:40:25  
+24347           | Rama Raman Pandey    | 11:40:25  
+24351           | Saurabh Kumar Singh  | 11:40:25  
+24360           | Sumit Kumar Patel    | 11:40:25  
+24304           | Aftab Khan           | 11:40:25  
+12345           | Pawan                | Absent    
+1234567         | Saransh              | Absent    
+=============================================
+Total Registered: 7
+Present: 5
+Absent: 2
